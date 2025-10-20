@@ -24,20 +24,57 @@ function drawTriangle() {
   }
 }
 
-// Draw a point with label
+/**
+ * Draw a point (dot). Label is drawn separately along the external angle bisector.
+ */
 function drawPoint(p, label) {
+  push();
   fill(0);
   noStroke();
   ellipse(p.x, p.y, 10);
-  fill(0); // Text color for label
-  text(label, p.x + 8, p.y + 3);
+  pop();
+}
+
+// Draw vertex label along the external direction of the angle bisector
+function drawVertexLabelOnExternalBisector(vertex, other1, other2, label) {
+  push();
+  fill(0);
+  noStroke();
+  textAlign(CENTER, CENTER);
+  textSize(12);
+
+  // Compute internal angle bisector direction
+  const v1 = p5.Vector.sub(other1, vertex).normalize();
+  const v2 = p5.Vector.sub(other2, vertex).normalize();
+  let bis = p5.Vector.add(v1, v2);
+
+  // Handle degenerate case (straight line) by using a perpendicular to v1
+  if (bis.mag() < 1e-6) {
+    bis = createVector(-v1.y, v1.x);
+  } else {
+    bis.normalize();
+  }
+
+  // External direction: opposite of the internal bisector
+  const outward = p5.Vector.mult(bis, -1);
+  const offset = 16; // pixels away from vertex
+  const pos = p5.Vector.add(vertex, p5.Vector.mult(outward, offset));
+
+  text(label, pos.x, pos.y);
+  pop();
 }
 
 // Draw all triangle points
 function drawTrianglePoints() {
+  // Draw points
   drawPoint(pA, "A");
   drawPoint(pB, "B");
   drawPoint(pC, "C");
+
+  // Place labels along the external angle bisectors (outside the triangle)
+  drawVertexLabelOnExternalBisector(pA, pB, pC, "A");
+  drawVertexLabelOnExternalBisector(pB, pA, pC, "B");
+  drawVertexLabelOnExternalBisector(pC, pA, pB, "C");
 }
 
 // Check if mouse is pressed on a triangle vertex

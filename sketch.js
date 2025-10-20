@@ -78,6 +78,9 @@ function draw() {
     measurements.lenCA
   );
 
+  // Highlight currently edited measurement (angle/length/coordinate)
+  updateLegendEditingState();
+
   // Update cursor based on hover state
   updateCursor();
 }

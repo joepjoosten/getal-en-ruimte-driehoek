@@ -110,3 +110,38 @@ function updateLegendMeasurements(angleA, angleB, angleC, lenAB, lenBC, lenCA) {
   document.getElementById('coord-b').textContent = `B: (${coordBX.toFixed(1)}, ${coordBY.toFixed(1)})`;
   document.getElementById('coord-c').textContent = `C: (${coordCX.toFixed(1)}, ${coordCY.toFixed(1)})`;
 }
+
+// Highlight which measurement is currently being edited
+function updateLegendEditingState() {
+  // Clear all editing states
+  document.querySelectorAll('.measurement-item.editing').forEach(el => el.classList.remove('editing'));
+
+  // Highlight by control drag (angle or length)
+  if (typeof activeControl !== 'undefined' && activeControl) {
+    if (activeControl.type === 'angle') {
+      const id = `angle-${activeControl.endpoint.toLowerCase()}`;
+      const el = document.getElementById(id);
+      if (el) el.classList.add('editing');
+      return;
+    }
+    if (activeControl.type === 'length') {
+      let suffix = activeControl.edge === 'CA' ? 'ac' : activeControl.edge.toLowerCase();
+      const id = `dist-${suffix}`;
+      const el = document.getElementById(id);
+      if (el) el.classList.add('editing');
+      return;
+    }
+  }
+
+  // Highlight by vertex drag (coordinates)
+  if (typeof draggingPoint !== 'undefined' && draggingPoint) {
+    let id = null;
+    if (draggingPoint === pA) id = 'coord-a';
+    else if (draggingPoint === pB) id = 'coord-b';
+    else if (draggingPoint === pC) id = 'coord-c';
+    if (id) {
+      const el = document.getElementById(id);
+      if (el) el.classList.add('editing');
+    }
+  }
+}
