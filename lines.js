@@ -70,9 +70,9 @@ function drawMedians() {
     const mBC = getMidpoint(pB, pC);
     const mCA = getMidpoint(pC, pA);
 
-    drawInfiniteDashedLine(pA, mBC);
-    drawInfiniteDashedLine(pB, mCA);
-    drawInfiniteDashedLine(pC, mAB);
+    drawInfiniteLine(pA, mBC);
+    drawInfiniteLine(pB, mCA);
+    drawInfiniteLine(pC, mAB);
 
     const centroid = lineLineIntersection(pA, mBC, pB, mCA);
     if (centroid) {
@@ -94,21 +94,21 @@ function drawAltitudes() {
     const normalBC = vecSideBC.copy().normalize().rotate(HALF_PI); // Perpendicular to BC
     const end1_altA = p5.Vector.add(pA, p5.Vector.mult(normalBC, 100));
     const end2_altA = p5.Vector.sub(pA, p5.Vector.mult(normalBC, 100));
-    drawInfiniteDashedLine(end1_altA, end2_altA);
+    drawInfiniteLine(end1_altA, end2_altA);
 
     // Altitude from B to AC
     const vecSideAC = p5.Vector.sub(pC, pA);
     const normalAC = vecSideAC.copy().normalize().rotate(HALF_PI); // Perpendicular to AC
     const end1_altB = p5.Vector.add(pB, p5.Vector.mult(normalAC, 100));
     const end2_altB = p5.Vector.sub(pB, p5.Vector.mult(normalAC, 100));
-    drawInfiniteDashedLine(end1_altB, end2_altB);
+    drawInfiniteLine(end1_altB, end2_altB);
 
     // Altitude from C to AB
     const vecSideAB = p5.Vector.sub(pB, pA);
     const normalAB = vecSideAB.copy().normalize().rotate(HALF_PI); // Perpendicular to AB
     const end1_altC = p5.Vector.add(pC, p5.Vector.mult(normalAB, 100));
     const end2_altC = p5.Vector.sub(pC, p5.Vector.mult(normalAB, 100));
-    drawInfiniteDashedLine(end1_altC, end2_altC);
+    drawInfiniteLine(end1_altC, end2_altC);
 
     const orthocenter = lineLineIntersection(
       end1_altA,
@@ -136,21 +136,21 @@ function drawBisectorsAndIncircle() {
     let vecAC_norm = p5.Vector.sub(pC, pA).normalize();
     let bisectorA_dir = p5.Vector.add(vecAB_norm, vecAC_norm).normalize();
     let endA_bisector = p5.Vector.add(pA, p5.Vector.mult(bisectorA_dir, 100));
-    drawInfiniteDashedLine(pA, endA_bisector);
+    drawInfiniteLine(pA, endA_bisector);
 
     // Angle bisector at B
     let vecBA_norm = p5.Vector.sub(pA, pB).normalize();
     let vecBC_norm = p5.Vector.sub(pC, pB).normalize();
     let bisectorB_dir = p5.Vector.add(vecBA_norm, vecBC_norm).normalize();
     let endB_bisector = p5.Vector.add(pB, p5.Vector.mult(bisectorB_dir, 100));
-    drawInfiniteDashedLine(pB, endB_bisector);
+    drawInfiniteLine(pB, endB_bisector);
 
     // Angle bisector at C
     let vecCA_norm = p5.Vector.sub(pA, pC).normalize();
     let vecCB_norm = p5.Vector.sub(pB, pC).normalize();
     let bisectorC_dir = p5.Vector.add(vecCA_norm, vecCB_norm).normalize();
     let endC_bisector = p5.Vector.add(pC, p5.Vector.mult(bisectorC_dir, 100));
-    drawInfiniteDashedLine(pC, endC_bisector);
+    drawInfiniteLine(pC, endC_bisector);
 
     const incenter = lineLineIntersection(pA, endA_bisector, pB, endB_bisector);
     if (incenter) {
@@ -203,21 +203,21 @@ function drawPerpBisectorsAndCircumcircle() {
     const normalAB_pb = p5.Vector.sub(pB, pA).normalize().rotate(HALF_PI);
     const end1_perpAB = p5.Vector.add(midAB_pb, p5.Vector.mult(normalAB_pb, 100));
     const end2_perpAB = p5.Vector.sub(midAB_pb, p5.Vector.mult(normalAB_pb, 100));
-    drawInfiniteDashedLine(end1_perpAB, end2_perpAB);
+    drawInfiniteLine(end1_perpAB, end2_perpAB);
 
     // Perpendicular bisector of BC
     const midBC_pb = getMidpoint(pB, pC);
     const normalBC_pb = p5.Vector.sub(pC, pB).normalize().rotate(HALF_PI);
     const end1_perpBC = p5.Vector.add(midBC_pb, p5.Vector.mult(normalBC_pb, 100));
     const end2_perpBC = p5.Vector.sub(midBC_pb, p5.Vector.mult(normalBC_pb, 100));
-    drawInfiniteDashedLine(end1_perpBC, end2_perpBC);
+    drawInfiniteLine(end1_perpBC, end2_perpBC);
 
     // Perpendicular bisector of CA
     const midCA_pb = getMidpoint(pC, pA);
     const normalCA_pb = p5.Vector.sub(pA, pC).normalize().rotate(HALF_PI);
     const end1_perpCA = p5.Vector.add(midCA_pb, p5.Vector.mult(normalCA_pb, 100));
     const end2_perpCA = p5.Vector.sub(midCA_pb, p5.Vector.mult(normalCA_pb, 100));
-    drawInfiniteDashedLine(end1_perpCA, end2_perpCA);
+    drawInfiniteLine(end1_perpCA, end2_perpCA);
 
     const circumcenter = lineLineIntersection(
       end1_perpAB,

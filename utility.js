@@ -111,6 +111,22 @@ function drawCoordinateSystem() {
   textAlign(LEFT, BASELINE);
 }
 
+// Function to draw a solid line that extends infinitely across the canvas
+// Takes two points that define the line direction
+function drawInfiniteLine(p1, p2) {
+  // Calculate direction vector
+  const dir = p5.Vector.sub(p2, p1).normalize();
+
+  // Find intersections with canvas boundaries
+  // We'll extend the line far in both directions and let canvas clipping handle it
+  const farDistance = width + height; // Large enough to reach any canvas edge
+  const start = p5.Vector.sub(p1, p5.Vector.mult(dir, farDistance));
+  const end = p5.Vector.add(p1, p5.Vector.mult(dir, farDistance));
+
+  // Draw solid line
+  line(start.x, start.y, end.x, end.y);
+}
+
 // Function to draw a dashed line that extends infinitely across the canvas
 // Takes two points that define the line direction
 function drawInfiniteDashedLine(p1, p2) {
