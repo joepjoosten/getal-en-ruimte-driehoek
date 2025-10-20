@@ -1,6 +1,10 @@
 # Driehoek P5.js - Interactive Triangle Geometry
 
+[![Deploy static site to GitHub Pages](https://github.com/joepjoosten/getal-en-ruimte-driehoek/actions/workflows/pages.yml/badge.svg)](https://github.com/joepjoosten/getal-en-ruimte-driehoek/actions/workflows/pages.yml)
+
 An interactive p5.js visualization for exploring triangle geometry, including special lines (medians, altitudes, angle bisectors, perpendicular bisectors) and circles (incircle, circumcircle).
+
+Live Demo: https://joepjoosten.github.io/getal-en-ruimte-driehoek/
 
 ## Features
 
