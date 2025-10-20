@@ -4,6 +4,10 @@
 // At 96 DPI: 1 cm ≈ 37.8 pixels
 const gridSize = 38; // Grid spacing in pixels (approximately 1cm)
 
+// --- Camera/Viewport offset for panning ---
+let cameraOffsetX = 0;
+let cameraOffsetY = 0;
+
 // --- Helper Functions for Geometric Calculations ---
 
 // Function to snap a value to the nearest grid point
@@ -16,13 +20,18 @@ function drawGrid() {
   stroke(255, 255, 255, 255);
   strokeWeight(0.5);
 
+  // Calculate the starting position based on camera offset
+  // Use modulo to ensure we always have a grid line visible on screen
+  const startX = (cameraOffsetX % gridSize) - gridSize;
+  const startY = (cameraOffsetY % gridSize) - gridSize;
+
   // Draw vertical lines
-  for (let x = 0; x <= width; x += gridSize) {
+  for (let x = startX; x <= width + gridSize; x += gridSize) {
     line(x, 0, x, height);
   }
 
   // Draw horizontal lines
-  for (let y = 0; y <= height; y += gridSize) {
+  for (let y = startY; y <= height + gridSize; y += gridSize) {
     line(0, y, width, y);
   }
 }

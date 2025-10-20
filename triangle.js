@@ -40,14 +40,15 @@ function drawTrianglePoints(angleA, angleB, angleC) {
 }
 
 // Check if mouse is pressed on a triangle vertex
-function handleTriangleMousePressed() {
-  if (dist(mouseX, mouseY, pA.x, pA.y) < 15) {
+// worldMouseX and worldMouseY are in world space coordinates
+function handleTriangleMousePressed(worldMouseX, worldMouseY) {
+  if (dist(worldMouseX, worldMouseY, pA.x, pA.y) < 15) {
     draggingPoint = pA;
     return true;
-  } else if (dist(mouseX, mouseY, pB.x, pB.y) < 15) {
+  } else if (dist(worldMouseX, worldMouseY, pB.x, pB.y) < 15) {
     draggingPoint = pB;
     return true;
-  } else if (dist(mouseX, mouseY, pC.x, pC.y) < 15) {
+  } else if (dist(worldMouseX, worldMouseY, pC.x, pC.y) < 15) {
     draggingPoint = pC;
     return true;
   }
@@ -57,9 +58,11 @@ function handleTriangleMousePressed() {
 // Handle dragging of triangle vertices
 function handleTriangleMouseDragged() {
   if (draggingPoint) {
-    // Snap to grid while dragging
-    draggingPoint.x = snapToGrid(mouseX);
-    draggingPoint.y = snapToGrid(mouseY);
+    // Convert mouse position to world space and snap to grid
+    const worldMouseX = mouseX - cameraOffsetX;
+    const worldMouseY = mouseY - cameraOffsetY;
+    draggingPoint.x = snapToGrid(worldMouseX);
+    draggingPoint.y = snapToGrid(worldMouseY);
   }
 }
 
