@@ -1,10 +1,11 @@
 // --- Visibility toggles for each element ---
-let showMedians = true;
-let showAltitudes = true;
-let showBisectors = true;
-let showPerpBisectors = true;
-let showIncircle = true;
-let showCircumcircle = true;
+let showMedians = false;
+let showAltitudes = false;
+let showBisectors = false;
+let showPerpBisectors = false;
+let showIncircle = false;
+let showCircumcircle = false;
+let showCoordinates = true;
 
 // --- Global variables for calculated values ---
 let scaled_AC_ratio = 0;

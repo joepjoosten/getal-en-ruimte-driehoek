@@ -8,6 +8,11 @@ const gridSize = 38; // Grid spacing in pixels (approximately 1cm)
 let cameraOffsetX = 0;
 let cameraOffsetY = 0;
 
+// --- Origin position in world space ---
+// Position origin slightly left of center
+const originX = -gridSize * 2;
+const originY = 0;
+
 // --- Helper Functions for Geometric Calculations ---
 
 // Function to snap a value to the nearest grid point
@@ -34,6 +39,76 @@ function drawGrid() {
   for (let y = startY; y <= height + gridSize; y += gridSize) {
     line(0, y, width, y);
   }
+}
+
+// Function to draw the coordinate system (axes, origin, and labels)
+function drawCoordinateSystem() {
+  // Screen position of origin
+  const screenOriginX = originX + cameraOffsetX;
+  const screenOriginY = originY + cameraOffsetY;
+
+  // Draw axes in dark gray
+  stroke(80, 80, 80);
+  strokeWeight(2);
+
+  // X-axis (horizontal)
+  line(0, screenOriginY, width, screenOriginY);
+
+  // Y-axis (vertical)
+  line(screenOriginX, 0, screenOriginX, height);
+
+  // Draw origin circle
+  fill(80, 80, 80);
+  noStroke();
+  ellipse(screenOriginX, screenOriginY, 8, 8);
+
+  // Draw tick labels
+  fill(80, 80, 80);
+  noStroke();
+  textSize(10);
+  textAlign(CENTER, TOP);
+
+  // Calculate which grid lines are visible
+  const startX = Math.floor((0 - cameraOffsetX) / gridSize) * gridSize;
+  const startY = Math.floor((0 - cameraOffsetY) / gridSize) * gridSize;
+
+  // X-axis labels (every grid tick)
+  for (let x = startX; x <= startX + width; x += gridSize) {
+    const screenX = x + cameraOffsetX;
+    if (screenX >= 0 && screenX <= width) {
+      // Calculate coordinate value relative to origin
+      const coordValue = Math.round((x - originX) / gridSize);
+      if (coordValue !== 0) { // Skip zero, we'll draw it at origin
+        // Position label below x-axis
+        const labelY = screenOriginY < height - 15 ? screenOriginY + 5 : screenOriginY - 15;
+        text(coordValue, screenX, labelY);
+      }
+    }
+  }
+
+  // Y-axis labels (every grid tick)
+  textAlign(RIGHT, CENTER);
+  for (let y = startY; y <= startY + height; y += gridSize) {
+    const screenY = y + cameraOffsetY;
+    if (screenY >= 0 && screenY <= height) {
+      // Calculate coordinate value relative to origin (negative y goes up)
+      const coordValue = -Math.round((y - originY) / gridSize);
+      if (coordValue !== 0) { // Skip zero
+        // Position label to left of y-axis
+        const labelX = screenOriginX > 20 ? screenOriginX - 5 : screenOriginX + 20;
+        text(coordValue, labelX, screenY);
+      }
+    }
+  }
+
+  // Draw "0" at origin
+  textAlign(RIGHT, TOP);
+  const zeroX = screenOriginX > 15 ? screenOriginX - 5 : screenOriginX + 15;
+  const zeroY = screenOriginY < height - 15 ? screenOriginY + 5 : screenOriginY - 15;
+  text("0", zeroX, zeroY);
+
+  // Reset text alignment
+  textAlign(LEFT, BASELINE);
 }
 
 // Function to draw a dashed line that extends infinitely across the canvas

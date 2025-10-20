@@ -108,7 +108,17 @@ function drawLegend() {
     noFill();
     ellipse(legendX + 7, legendY + 5, 10);
   });
-  legendY += lineHeight + 5; // Add a bit more space before metrics
+  legendY += lineHeight;
+
+  // Coordinate System
+  drawLegendItem(legendY, showCoordinates, "Coördinatensysteem", () => {
+    stroke(showCoordinates ? color(80, 80, 80) : color(150));
+    strokeWeight(1);
+    // Draw mini axes
+    line(legendX + 3, legendY + 7, legendX + 12, legendY + 7); // X-axis
+    line(legendX + 7, legendY + 3, legendX + 7, legendY + 11); // Y-axis
+  });
+  legendY += lineHeight + 5; // Add a bit more space before end
 
   // Reset cursor if not hovering over any legend item
   let hovering = false;
@@ -144,6 +154,8 @@ function handleLegendClick() {
           showIncircle = !showIncircle;
         } else if (item.label === "Omgeschreven Cirkel") {
           showCircumcircle = !showCircumcircle;
+        } else if (item.label === "Coördinatensysteem") {
+          showCoordinates = !showCoordinates;
         }
         return true; // Handled
       }

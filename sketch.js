@@ -15,6 +15,10 @@ let panStartY = 0;
 function setup() {
   createCanvas(windowWidth, windowHeight);
 
+  // Center the origin on screen initially
+  cameraOffsetX = windowWidth / 2 - originX;
+  cameraOffsetY = windowHeight / 2 - originY;
+
   // Initialize triangle vertices
   initTriangle();
 
@@ -34,6 +38,11 @@ function draw() {
 
   // Draw grid first (in background)
   drawGrid();
+
+  // Draw coordinate system (axes and labels in screen space)
+  if (showCoordinates) {
+    drawCoordinateSystem();
+  }
 
   // Apply camera transformation for all world-space objects
   push();

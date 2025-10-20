@@ -5,9 +5,13 @@ let draggingPoint = null; // Stores which point is being dragged
 
 // Initialize triangle vertices
 function initTriangle() {
-  pA = createVector(snapToGrid(38 * 3), snapToGrid(38 * 2));
-  pB = createVector(snapToGrid(38 * 15), snapToGrid(38 * 8));
-  pC = createVector(snapToGrid(38 * 3), snapToGrid(38 * 14));
+  // Coordinates relative to origin: A(-4,5), B(4,1), C(-4,-3)
+  // Convert from coordinate system to world space:
+  // worldX = originX + coordX * gridSize
+  // worldY = originY - coordY * gridSize (negative because Y is inverted in screen space)
+  pA = createVector(originX + (-4 * gridSize), originY - (5 * gridSize));
+  pB = createVector(originX + (4 * gridSize), originY - (1 * gridSize));
+  pC = createVector(originX + (-4 * gridSize), originY - (-3 * gridSize));
 }
 
 // Draw the triangle
