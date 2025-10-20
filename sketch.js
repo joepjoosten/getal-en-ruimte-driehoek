@@ -22,6 +22,9 @@ function setup() {
 
   // Initialize triangle vertices
   initTriangle();
+
+  // Initialize HTML legend
+  initLegend();
 }
 
 // Handle window resize
@@ -65,8 +68,8 @@ function draw() {
 
   pop(); // End camera transformation
 
-  // Draw legend (in screen space, after pop)
-  drawLegend(
+  // Update legend measurements (HTML)
+  updateLegendMeasurements(
     measurements.angleA,
     measurements.angleB,
     measurements.angleC,
@@ -82,11 +85,6 @@ function draw() {
 // --- Interaction Functions ---
 
 function mousePressed() {
-  // Check legend clicks first (in screen space)
-  if (handleLegendClick()) {
-    return; // Legend click was handled
-  }
-
   // Convert mouse position to world space for triangle interaction
   const worldMouseX = mouseX - cameraOffsetX;
   const worldMouseY = mouseY - cameraOffsetY;
@@ -135,16 +133,6 @@ function mouseReleased() {
 
 // Update cursor based on what's under the mouse
 function updateCursor() {
-  // Check if hovering over legend (legend handles its own cursor)
-  if (window.legendItems) {
-    for (let item of window.legendItems) {
-      if (mouseX >= item.x && mouseX <= item.x + item.width &&
-          mouseY >= item.y && mouseY <= item.y + item.height) {
-        return; // Legend handles cursor
-      }
-    }
-  }
-
   // Check if hovering over triangle vertices (in world space)
   const worldMouseX = mouseX - cameraOffsetX;
   const worldMouseY = mouseY - cameraOffsetY;

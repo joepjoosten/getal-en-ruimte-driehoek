@@ -12,14 +12,194 @@
       overflow: hidden;
       width: 100%;
       height: 100%;
+      font-family: Arial, sans-serif;
     }
     canvas {
       display: block;
     }
+
+    #legend {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      min-width: 200px;
+      font-size: 11px;
+    }
+
+    #legend h3 {
+      margin: 0 0 10px 0;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    #legend h4 {
+      margin: 15px 0 8px 0;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      padding: 4px 0;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background 0.2s;
+    }
+
+    .legend-item:hover {
+      background: rgba(200, 200, 200, 0.3);
+    }
+
+    .legend-item.disabled {
+      color: #999;
+      text-decoration: line-through;
+    }
+
+    .legend-icon {
+      width: 20px;
+      height: 12px;
+      margin-right: 8px;
+      flex-shrink: 0;
+    }
+
+    .legend-line {
+      width: 100%;
+      height: 2px;
+      background: currentColor;
+    }
+
+    .legend-circle {
+      width: 10px;
+      height: 10px;
+      border: 2px solid currentColor;
+      border-radius: 50%;
+      margin: 0 auto;
+    }
+
+    .legend-axes {
+      width: 12px;
+      height: 12px;
+      position: relative;
+    }
+
+    .legend-axes::before,
+    .legend-axes::after {
+      content: '';
+      position: absolute;
+      background: currentColor;
+    }
+
+    .legend-axes::before {
+      width: 100%;
+      height: 1px;
+      top: 50%;
+      left: 0;
+    }
+
+    .legend-axes::after {
+      width: 1px;
+      height: 100%;
+      left: 50%;
+      top: 0;
+    }
+
+    .measurement-item {
+      padding: 2px 0;
+      color: #333;
+    }
+
+    .color-red { color: rgb(255, 0, 0); }
+    .color-green { color: rgb(0, 150, 0); }
+    .color-blue { color: rgb(0, 0, 255); }
+    .color-purple { color: rgb(128, 0, 128); }
+    .color-orange { color: rgb(255, 165, 0); }
+    .color-cyan { color: rgb(0, 255, 255); }
+    .color-gray { color: rgb(80, 80, 80); }
   </style>
 </head>
 <body>
   <main></main>
+
+  <!-- Legend HTML -->
+  <div id="legend">
+    <h3>Legenda</h3>
+
+    <div class="legend-item" data-toggle="triangle">
+      <div class="legend-icon">
+        <div class="legend-line" style="background: white; border: 1px solid black;"></div>
+      </div>
+      <span>Driehoek ABC</span>
+    </div>
+
+    <div class="legend-item" data-toggle="medians">
+      <div class="legend-icon color-red">
+        <div class="legend-line"></div>
+      </div>
+      <span>Zwaartelijnen (Medianen)</span>
+    </div>
+
+    <div class="legend-item" data-toggle="altitudes">
+      <div class="legend-icon color-green">
+        <div class="legend-line"></div>
+      </div>
+      <span>Hoogtelijnen (Altitudes)</span>
+    </div>
+
+    <div class="legend-item" data-toggle="bisectors">
+      <div class="legend-icon color-blue">
+        <div class="legend-line"></div>
+      </div>
+      <span>Bissectrices (Hoeklijnen)</span>
+    </div>
+
+    <div class="legend-item" data-toggle="perpBisectors">
+      <div class="legend-icon color-purple">
+        <div class="legend-line"></div>
+      </div>
+      <span>Middelloodlijnen</span>
+    </div>
+
+    <div class="legend-item" data-toggle="incircle">
+      <div class="legend-icon color-orange">
+        <div class="legend-circle"></div>
+      </div>
+      <span>Ingeschreven Cirkel</span>
+    </div>
+
+    <div class="legend-item" data-toggle="circumcircle">
+      <div class="legend-icon color-cyan">
+        <div class="legend-circle"></div>
+      </div>
+      <span>Omgeschreven Cirkel</span>
+    </div>
+
+    <div class="legend-item" data-toggle="coordinates">
+      <div class="legend-icon color-gray">
+        <div class="legend-axes"></div>
+      </div>
+      <span>Coördinatensysteem</span>
+    </div>
+
+    <h4>Metingen</h4>
+    <div id="measurements">
+      <div class="measurement-item" id="angle-a">∠A: --°</div>
+      <div class="measurement-item" id="angle-b">∠B: --°</div>
+      <div class="measurement-item" id="angle-c">∠C: --°</div>
+      <div style="height: 5px;"></div>
+      <div class="measurement-item" id="dist-ab">AB: -- cm</div>
+      <div class="measurement-item" id="dist-bc">BC: -- cm</div>
+      <div class="measurement-item" id="dist-ac">AC: -- cm</div>
+      <div style="height: 5px;"></div>
+      <div class="measurement-item" id="coord-a">A: (--, --)</div>
+      <div class="measurement-item" id="coord-b">B: (--, --)</div>
+      <div class="measurement-item" id="coord-c">C: (--, --)</div>
+    </div>
+  </div>
 
   <!-- Load p5.js modules in correct order -->
   <script src="utility.js"></script>

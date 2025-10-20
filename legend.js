@@ -1,153 +1,98 @@
-// --- Legend Function ---
-function drawLegend(angleA, angleB, angleC, lenAB, lenBC, lenCA) {
-  const legendX = width - 180;
-  let legendY = 20;
-  const lineHeight = 18;
+// --- Legend Management (HTML-based) ---
 
-  fill(0);
-  noStroke();
-  textSize(14);
-  textStyle(BOLD);
-  text("Legenda (klik om te verbergen):", legendX - 20, legendY);
-  legendY += lineHeight;
-  textStyle(NORMAL);
+// Initialize legend event listeners
+function initLegend() {
+  const legendItems = document.querySelectorAll('.legend-item[data-toggle]');
 
-  // Store legend item positions for click detection
-  window.legendItems = [];
+  legendItems.forEach(item => {
+    const toggle = item.getAttribute('data-toggle');
 
-  // Triangle (not clickable)
-  fill(255);
-  rect(legendX, legendY, 15, 10);
-  fill(0);
-  text("Driehoek ABC", legendX + 25, legendY + 10);
-  legendY += lineHeight;
+    // Set initial state
+    updateLegendItemState(item, toggle);
 
-  // Helper function to draw legend item with hover effect
-  function drawLegendItem(yPos, visible, label, drawIcon) {
-    const itemX = legendX - 5;
-    const itemY = yPos - 2;
-    const itemWidth = 175;
-    const itemHeight = 16;
-
-    // Store position for click detection
-    window.legendItems.push({
-      x: itemX,
-      y: itemY,
-      width: itemWidth,
-      height: itemHeight,
-      label: label
+    // Add click handler
+    item.addEventListener('click', () => {
+      handleLegendToggle(toggle);
+      updateLegendItemState(item, toggle);
     });
+  });
+}
 
-    // Hover effect
-    if (mouseX >= itemX && mouseX <= itemX + itemWidth &&
-        mouseY >= itemY && mouseY <= itemY + itemHeight) {
-      fill(200, 200, 200, 100);
-      noStroke();
-      rect(itemX, itemY, itemWidth, itemHeight, 3);
-      cursor(HAND);
-    }
+// Handle toggle clicks
+function handleLegendToggle(toggle) {
+  switch (toggle) {
+    case 'medians':
+      showMedians = !showMedians;
+      break;
+    case 'altitudes':
+      showAltitudes = !showAltitudes;
+      break;
+    case 'bisectors':
+      showBisectors = !showBisectors;
+      break;
+    case 'perpBisectors':
+      showPerpBisectors = !showPerpBisectors;
+      break;
+    case 'incircle':
+      showIncircle = !showIncircle;
+      break;
+    case 'circumcircle':
+      showCircumcircle = !showCircumcircle;
+      break;
+    case 'coordinates':
+      showCoordinates = !showCoordinates;
+      break;
+  }
+}
 
-    // Draw icon
-    drawIcon();
+// Update visual state of legend item
+function updateLegendItemState(item, toggle) {
+  let isEnabled = true;
 
-    // Draw text with strikethrough if hidden
-    fill(visible ? 0 : 150);
-    noStroke();
-    text(label, legendX + 25, yPos + 10);
-
-    if (!visible) {
-      stroke(150);
-      strokeWeight(1);
-      line(legendX + 25, yPos + 6, legendX + 25 + textWidth(label), yPos + 6);
-    }
+  switch (toggle) {
+    case 'medians':
+      isEnabled = showMedians;
+      break;
+    case 'altitudes':
+      isEnabled = showAltitudes;
+      break;
+    case 'bisectors':
+      isEnabled = showBisectors;
+      break;
+    case 'perpBisectors':
+      isEnabled = showPerpBisectors;
+      break;
+    case 'incircle':
+      isEnabled = showIncircle;
+      break;
+    case 'circumcircle':
+      isEnabled = showCircumcircle;
+      break;
+    case 'coordinates':
+      isEnabled = showCoordinates;
+      break;
   }
 
-  // Zwaartelijnen
-  drawLegendItem(legendY, showMedians, "Zwaartelijnen (Medianen)", () => {
-    stroke(showMedians ? color(255, 0, 0) : color(150));
-    strokeWeight(1);
-    line(legendX, legendY + 5, legendX + 15, legendY + 5);
-  });
-  legendY += lineHeight;
+  if (isEnabled) {
+    item.classList.remove('disabled');
+  } else {
+    item.classList.add('disabled');
+  }
+}
 
-  // Hoogtelijnen
-  drawLegendItem(legendY, showAltitudes, "Hoogtelijnen (Altitudes)", () => {
-    stroke(showAltitudes ? color(0, 150, 0) : color(150));
-    strokeWeight(1);
-    line(legendX, legendY + 5, legendX + 15, legendY + 5);
-  });
-  legendY += lineHeight;
+// Update measurements display
+function updateLegendMeasurements(angleA, angleB, angleC, lenAB, lenBC, lenCA) {
+  // Update angles
+  document.getElementById('angle-a').textContent = `∠A: ${angleA.toFixed(1)}°`;
+  document.getElementById('angle-b').textContent = `∠B: ${angleB.toFixed(1)}°`;
+  document.getElementById('angle-c').textContent = `∠C: ${angleC.toFixed(1)}°`;
 
-  // Bissectrices
-  drawLegendItem(legendY, showBisectors, "Bissectrices (Hoeklijnen)", () => {
-    stroke(showBisectors ? color(0, 0, 255) : color(150));
-    strokeWeight(1);
-    line(legendX, legendY + 5, legendX + 15, legendY + 5);
-  });
-  legendY += lineHeight;
+  // Update distances
+  document.getElementById('dist-ab').textContent = `AB: ${(lenAB / gridSize).toFixed(2)} cm`;
+  document.getElementById('dist-bc').textContent = `BC: ${(lenBC / gridSize).toFixed(2)} cm`;
+  document.getElementById('dist-ac').textContent = `AC: ${(lenCA / gridSize).toFixed(2)} cm`;
 
-  // Middelloodlijnen
-  drawLegendItem(legendY, showPerpBisectors, "Middelloodlijnen", () => {
-    stroke(showPerpBisectors ? color(128, 0, 128) : color(150));
-    strokeWeight(1);
-    line(legendX, legendY + 5, legendX + 15, legendY + 5);
-  });
-  legendY += lineHeight;
-
-  // Ingeschreven Cirkel
-  drawLegendItem(legendY, showIncircle, "Ingeschreven Cirkel", () => {
-    stroke(showIncircle ? color(255, 165, 0) : color(150));
-    noFill();
-    ellipse(legendX + 7, legendY + 5, 10);
-  });
-  legendY += lineHeight;
-
-  // Omgeschreven Cirkel
-  drawLegendItem(legendY, showCircumcircle, "Omgeschreven Cirkel", () => {
-    stroke(showCircumcircle ? color(0, 255, 255) : color(150));
-    noFill();
-    ellipse(legendX + 7, legendY + 5, 10);
-  });
-  legendY += lineHeight;
-
-  // Coordinate System
-  drawLegendItem(legendY, showCoordinates, "Coördinatensysteem", () => {
-    stroke(showCoordinates ? color(80, 80, 80) : color(150));
-    strokeWeight(1);
-    // Draw mini axes
-    line(legendX + 3, legendY + 7, legendX + 12, legendY + 7); // X-axis
-    line(legendX + 7, legendY + 3, legendX + 7, legendY + 11); // Y-axis
-  });
-  legendY += lineHeight + 10; // Add extra space before measurements
-
-  // === Measurements Section (Read-only) ===
-  fill(0);
-  noStroke();
-  textSize(14);
-  textStyle(BOLD);
-  text("Metingen:", legendX - 20, legendY);
-  legendY += lineHeight;
-  textStyle(NORMAL);
-  textSize(11);
-
-  // Angles
-  fill(0);
-  text("∠A: " + angleA.toFixed(1) + "°", legendX, legendY);
-  legendY += lineHeight;
-  text("∠B: " + angleB.toFixed(1) + "°", legendX, legendY);
-  legendY += lineHeight;
-  text("∠C: " + angleC.toFixed(1) + "°", legendX, legendY);
-  legendY += lineHeight + 5;
-
-  // Distances (in cm)
-  text("AB: " + (lenAB / gridSize).toFixed(2) + " cm", legendX, legendY);
-  legendY += lineHeight;
-  text("BC: " + (lenBC / gridSize).toFixed(2) + " cm", legendX, legendY);
-  legendY += lineHeight;
-  text("AC: " + (lenCA / gridSize).toFixed(2) + " cm", legendX, legendY);
-  legendY += lineHeight + 5;
-
-  // Coordinates
+  // Update coordinates
   const coordAX = (pA.x - originX) / gridSize;
   const coordAY = -(pA.y - originY) / gridSize;
   const coordBX = (pB.x - originX) / gridSize;
@@ -155,52 +100,7 @@ function drawLegend(angleA, angleB, angleC, lenAB, lenBC, lenCA) {
   const coordCX = (pC.x - originX) / gridSize;
   const coordCY = -(pC.y - originY) / gridSize;
 
-  text("A: (" + coordAX.toFixed(1) + ", " + coordAY.toFixed(1) + ")", legendX, legendY);
-  legendY += lineHeight;
-  text("B: (" + coordBX.toFixed(1) + ", " + coordBY.toFixed(1) + ")", legendX, legendY);
-  legendY += lineHeight;
-  text("C: (" + coordCX.toFixed(1) + ", " + coordCY.toFixed(1) + ")", legendX, legendY);
-
-  // Reset cursor if not hovering over any legend item
-  let hovering = false;
-  for (let item of window.legendItems) {
-    if (mouseX >= item.x && mouseX <= item.x + item.width &&
-        mouseY >= item.y && mouseY <= item.y + item.height) {
-      hovering = true;
-      break;
-    }
-  }
-  if (!hovering) {
-    cursor(ARROW);
-  }
-}
-
-// Handle legend click events
-function handleLegendClick() {
-  // Check if clicking on a legend item
-  if (window.legendItems) {
-    for (let item of window.legendItems) {
-      if (mouseX >= item.x && mouseX <= item.x + item.width &&
-          mouseY >= item.y && mouseY <= item.y + item.height) {
-        // Toggle visibility based on label
-        if (item.label === "Zwaartelijnen (Medianen)") {
-          showMedians = !showMedians;
-        } else if (item.label === "Hoogtelijnen (Altitudes)") {
-          showAltitudes = !showAltitudes;
-        } else if (item.label === "Bissectrices (Hoeklijnen)") {
-          showBisectors = !showBisectors;
-        } else if (item.label === "Middelloodlijnen") {
-          showPerpBisectors = !showPerpBisectors;
-        } else if (item.label === "Ingeschreven Cirkel") {
-          showIncircle = !showIncircle;
-        } else if (item.label === "Omgeschreven Cirkel") {
-          showCircumcircle = !showCircumcircle;
-        } else if (item.label === "Coördinatensysteem") {
-          showCoordinates = !showCoordinates;
-        }
-        return true; // Handled
-      }
-    }
-  }
-  return false; // Not handled
+  document.getElementById('coord-a').textContent = `A: (${coordAX.toFixed(1)}, ${coordAY.toFixed(1)})`;
+  document.getElementById('coord-b').textContent = `B: (${coordBX.toFixed(1)}, ${coordBY.toFixed(1)})`;
+  document.getElementById('coord-c').textContent = `C: (${coordCX.toFixed(1)}, ${coordCY.toFixed(1)})`;
 }
