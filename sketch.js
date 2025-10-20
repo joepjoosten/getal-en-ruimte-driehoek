@@ -5,6 +5,7 @@
 // 3. lines.js
 // 4. legend.js
 // 5. inputs.js
+// 6. controls.js
 
 // --- Panning variables ---
 let isPanning = false;
@@ -21,15 +22,11 @@ function setup() {
 
   // Initialize triangle vertices
   initTriangle();
-
-  // Create input fields
-  createInputFields();
 }
 
 // Handle window resize
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
-  repositionInputFields();
 }
 
 // --- Drawing Function ---
@@ -60,10 +57,16 @@ function draw() {
   // Draw all special lines and circles
   drawSpecialLines();
 
+  // Update and draw edge controls
+  const worldMouseX = mouseX - cameraOffsetX;
+  const worldMouseY = mouseY - cameraOffsetY;
+  updateEdgeHover(worldMouseX, worldMouseY);
+  drawEdgeControls(hoveredEdge);
+
   pop(); // End camera transformation
 
-  // Update input fields with current values (in screen space)
-  updateInputFieldValues(
+  // Draw legend (in screen space, after pop)
+  drawLegend(
     measurements.angleA,
     measurements.angleB,
     measurements.angleC,
@@ -71,9 +74,6 @@ function draw() {
     measurements.lenBC,
     measurements.lenCA
   );
-
-  // Draw legend (in screen space, after pop)
-  drawLegend();
 
   // Update cursor based on hover state
   updateCursor();
@@ -91,6 +91,11 @@ function mousePressed() {
   const worldMouseX = mouseX - cameraOffsetX;
   const worldMouseY = mouseY - cameraOffsetY;
 
+  // Check edge control clicks (in world space)
+  if (handleControlMousePressed(worldMouseX, worldMouseY)) {
+    return; // Control was clicked
+  }
+
   // Check triangle vertex clicks (in world space)
   if (handleTriangleMousePressed(worldMouseX, worldMouseY)) {
     return; // Triangle vertex was clicked
@@ -103,6 +108,14 @@ function mousePressed() {
 }
 
 function mouseDragged() {
+  const worldMouseX = mouseX - cameraOffsetX;
+  const worldMouseY = mouseY - cameraOffsetY;
+
+  // Check if dragging a control
+  if (handleControlDragged(worldMouseX, worldMouseY)) {
+    return; // Control is being dragged
+  }
+
   if (isPanning) {
     // Update camera offset for panning
     cameraOffsetX = mouseX - panStartX;
@@ -115,6 +128,7 @@ function mouseDragged() {
 }
 
 function mouseReleased() {
+  handleControlReleased();
   isPanning = false;
   handleTriangleMouseReleased();
 }
@@ -135,6 +149,12 @@ function updateCursor() {
   const worldMouseX = mouseX - cameraOffsetX;
   const worldMouseY = mouseY - cameraOffsetY;
 
+  // Check if hovering over controls
+  if (isHoveringControl()) {
+    cursor('pointer');
+    return;
+  }
+
   if (dist(worldMouseX, worldMouseY, pA.x, pA.y) < 15 ||
       dist(worldMouseX, worldMouseY, pB.x, pB.y) < 15 ||
       dist(worldMouseX, worldMouseY, pC.x, pC.y) < 15) {
@@ -143,7 +163,7 @@ function updateCursor() {
   }
 
   // Default cursor for panning
-  if (isPanning) {
+  if (isPanning || isControlActive()) {
     cursor('grabbing');
   } else {
     cursor('grab');

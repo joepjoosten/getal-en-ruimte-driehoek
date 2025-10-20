@@ -1,5 +1,5 @@
 // --- Legend Function ---
-function drawLegend() {
+function drawLegend(angleA, angleB, angleC, lenAB, lenBC, lenCA) {
   const legendX = width - 180;
   let legendY = 20;
   const lineHeight = 18;
@@ -118,7 +118,48 @@ function drawLegend() {
     line(legendX + 3, legendY + 7, legendX + 12, legendY + 7); // X-axis
     line(legendX + 7, legendY + 3, legendX + 7, legendY + 11); // Y-axis
   });
-  legendY += lineHeight + 5; // Add a bit more space before end
+  legendY += lineHeight + 10; // Add extra space before measurements
+
+  // === Measurements Section (Read-only) ===
+  fill(0);
+  noStroke();
+  textSize(14);
+  textStyle(BOLD);
+  text("Metingen:", legendX - 20, legendY);
+  legendY += lineHeight;
+  textStyle(NORMAL);
+  textSize(11);
+
+  // Angles
+  fill(0);
+  text("∠A: " + angleA.toFixed(1) + "°", legendX, legendY);
+  legendY += lineHeight;
+  text("∠B: " + angleB.toFixed(1) + "°", legendX, legendY);
+  legendY += lineHeight;
+  text("∠C: " + angleC.toFixed(1) + "°", legendX, legendY);
+  legendY += lineHeight + 5;
+
+  // Distances (in cm)
+  text("AB: " + (lenAB / gridSize).toFixed(2) + " cm", legendX, legendY);
+  legendY += lineHeight;
+  text("BC: " + (lenBC / gridSize).toFixed(2) + " cm", legendX, legendY);
+  legendY += lineHeight;
+  text("AC: " + (lenCA / gridSize).toFixed(2) + " cm", legendX, legendY);
+  legendY += lineHeight + 5;
+
+  // Coordinates
+  const coordAX = (pA.x - originX) / gridSize;
+  const coordAY = -(pA.y - originY) / gridSize;
+  const coordBX = (pB.x - originX) / gridSize;
+  const coordBY = -(pB.y - originY) / gridSize;
+  const coordCX = (pC.x - originX) / gridSize;
+  const coordCY = -(pC.y - originY) / gridSize;
+
+  text("A: (" + coordAX.toFixed(1) + ", " + coordAY.toFixed(1) + ")", legendX, legendY);
+  legendY += lineHeight;
+  text("B: (" + coordBX.toFixed(1) + ", " + coordBY.toFixed(1) + ")", legendX, legendY);
+  legendY += lineHeight;
+  text("C: (" + coordCX.toFixed(1) + ", " + coordCY.toFixed(1) + ")", legendX, legendY);
 
   // Reset cursor if not hovering over any legend item
   let hovering = false;
