@@ -166,6 +166,80 @@ function drawDashedLine(x1, y1, x2, y2, dashLength, gapLength) {
   }
 }
 
+// --- Mathematical indicator drawing functions ---
+
+// Draw a right angle indicator at point p, where the angle is between vectors to p1 and p2
+function drawRightAngleIndicator(p, p1, p2, size = 10) {
+  push();
+  const v1 = p5.Vector.sub(p1, p).normalize();
+  const v2 = p5.Vector.sub(p2, p).normalize();
+
+  // Draw small square to indicate right angle
+  const corner1 = p5.Vector.add(p, p5.Vector.mult(v1, size));
+  const corner2 = p5.Vector.add(corner1, p5.Vector.mult(v2, size));
+  const corner3 = p5.Vector.add(p, p5.Vector.mult(v2, size));
+
+  noFill();
+  beginShape();
+  vertex(corner1.x, corner1.y);
+  vertex(corner2.x, corner2.y);
+  vertex(corner3.x, corner3.y);
+  endShape();
+  pop();
+}
+
+// Draw equal segment marks (single, double, or triple tick marks)
+function drawEqualSegmentMarks(p1, p2, markCount = 1, markSize = 8) {
+  push();
+  const mid = p5.Vector.add(p1, p2).div(2);
+  const dir = p5.Vector.sub(p2, p1).normalize();
+  const perp = createVector(-dir.y, dir.x); // Perpendicular vector
+
+  const spacing = 4; // Spacing between multiple marks
+  const startOffset = -(markCount - 1) * spacing / 2;
+
+  for (let i = 0; i < markCount; i++) {
+    const offset = startOffset + i * spacing;
+    const markPos = p5.Vector.add(mid, p5.Vector.mult(dir, offset));
+    const mark1 = p5.Vector.add(markPos, p5.Vector.mult(perp, markSize / 2));
+    const mark2 = p5.Vector.sub(markPos, p5.Vector.mult(perp, markSize / 2));
+    line(mark1.x, mark1.y, mark2.x, mark2.y);
+  }
+  pop();
+}
+
+// Draw equal angle arc indicators
+function drawEqualAngleArc(vertex, p1, p2, arcCount = 1, radius = 15) {
+  push();
+  const v1 = p5.Vector.sub(p1, vertex);
+  const v2 = p5.Vector.sub(p2, vertex);
+  const angle1 = atan2(v1.y, v1.x);
+  const angle2 = atan2(v2.y, v2.x);
+
+  // Ensure we draw the smaller angle
+  let startAngle = angle1;
+  let endAngle = angle2;
+  if (abs(angle2 - angle1) > PI) {
+    if (angle1 < angle2) {
+      startAngle = angle2;
+      endAngle = angle1 + TWO_PI;
+    } else {
+      startAngle = angle1;
+      endAngle = angle2 + TWO_PI;
+    }
+  } else if (angle1 > angle2) {
+    startAngle = angle2;
+    endAngle = angle1;
+  }
+
+  noFill();
+  for (let i = 0; i < arcCount; i++) {
+    const r = radius + i * 4;
+    arc(vertex.x, vertex.y, r * 2, r * 2, startAngle, endAngle);
+  }
+  pop();
+}
+
 // Function to find the midpoint of two points
 function getMidpoint(p1, p2) {
   return p5.Vector.add(p1, p2).div(2);

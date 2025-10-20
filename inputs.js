@@ -12,7 +12,7 @@ let labelAfstanden, labelDistAB, labelDistBC, labelDistAC;
 function createInputFields() {
   // Create input fields for angles
   const inputX = width - 170;
-  let inputY = height - 200;
+  let inputY = height - 300;
 
   labelHoeken = createDiv('Hoeken:').style('font-size', '12px').style('font-weight', 'bold');
   labelHoeken.position(inputX, inputY);
@@ -74,7 +74,7 @@ function createInputFields() {
 // Reposition input fields (called when window is resized)
 function repositionInputFields() {
   const inputX = width - 170;
-  let inputY = height - 150;
+  let inputY = height - 200;
 
   labelHoeken.position(inputX, inputY);
   inputY += 20;

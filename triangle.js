@@ -22,25 +22,20 @@ function drawTriangle() {
   triangle(pA.x, pA.y, pB.x, pB.y, pC.x, pC.y);
 }
 
-// Draw a point with label and angle
-function drawPoint(p, label, angle) {
+// Draw a point with label
+function drawPoint(p, label) {
   fill(0);
   noStroke();
   ellipse(p.x, p.y, 10);
   fill(0); // Text color for label
   text(label, p.x + 8, p.y + 3);
-
-  // Display angle
-  const angleText = angle.toFixed(1) + "°"; // Round to 1 decimal place
-  fill(0); // Text color for angle
-  text(angleText, p.x + 8, p.y + 18); // Display below the label
 }
 
 // Draw all triangle points
-function drawTrianglePoints(angleA, angleB, angleC) {
-  drawPoint(pA, "A", angleA);
-  drawPoint(pB, "B", angleB);
-  drawPoint(pC, "C", angleC);
+function drawTrianglePoints() {
+  drawPoint(pA, "A");
+  drawPoint(pB, "B");
+  drawPoint(pC, "C");
 }
 
 // Check if mouse is pressed on a triangle vertex

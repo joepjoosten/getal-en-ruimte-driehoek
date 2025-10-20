@@ -54,12 +54,8 @@ function draw() {
   // Draw triangle
   drawTriangle();
 
-  // Draw and update points with angles
-  drawTrianglePoints(
-    measurements.angleA,
-    measurements.angleB,
-    measurements.angleC
-  );
+  // Draw and update points
+  drawTrianglePoints();
 
   // Draw all special lines and circles
   drawSpecialLines();
