@@ -407,9 +407,18 @@ function handleControlReleased() {
 
 // Update hovered edge (call in draw loop)
 function updateEdgeHover(worldMouseX, worldMouseY) {
-  if (!activeControl) {
+  // Don't update hover state if dragging a control or a vertex
+  if (!activeControl && !isDraggingVertex()) {
     hoveredEdge = checkEdgeHover(worldMouseX, worldMouseY);
+  } else if (isDraggingVertex()) {
+    // Clear hover state when dragging vertex
+    hoveredEdge = null;
   }
+}
+
+// Check if a vertex is being dragged
+function isDraggingVertex() {
+  return draggingPoint !== null;
 }
 
 // Check if controls should override vertex dragging
