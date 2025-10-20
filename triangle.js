@@ -16,10 +16,12 @@ function initTriangle() {
 
 // Draw the triangle
 function drawTriangle() {
-  strokeWeight(2);
-  stroke(255); // White
-  fill(255, 100); // Semi-transparent white
-  triangle(pA.x, pA.y, pB.x, pB.y, pC.x, pC.y);
+  if (showTriangle) {
+    strokeWeight(2);
+    stroke(255); // White
+    fill(255, 100); // Semi-transparent white
+    triangle(pA.x, pA.y, pB.x, pB.y, pC.x, pC.y);
+  }
 }
 
 // Draw a point with label

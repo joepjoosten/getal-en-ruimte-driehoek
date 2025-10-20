@@ -1,4 +1,5 @@
 // --- Visibility toggles for each element ---
+let showTriangle = true;
 let showMedians = false;
 let showAltitudes = false;
 let showBisectors = false;
@@ -291,9 +292,9 @@ function drawPerpBisectorsAndCircumcircle() {
         pA.y,
       );
 
-      // 7. Omgeschreven Cirkel (Circumcircle) - Cyan
+      // 7. Omgeschreven Cirkel (Circumcircle) - Dark Yellow
       if (showCircumcircle) {
-        stroke(0, 255, 255); // Cyan
+        stroke(180, 180, 0); // Dark Yellow
         noFill();
         ellipse(circumcenter.x, circumcenter.y, actual_circumradius * 2);
       }
@@ -323,7 +324,7 @@ function drawPerpBisectorsAndCircumcircle() {
         pA.x,
         pA.y,
       );
-      stroke(0, 255, 255); // Cyan
+      stroke(180, 180, 0); // Dark Yellow
       noFill();
       ellipse(circumcenter.x, circumcenter.y, actual_circumradius * 2);
     }

@@ -21,6 +21,9 @@ function initLegend() {
 // Handle toggle clicks
 function handleLegendToggle(toggle) {
   switch (toggle) {
+    case 'triangle':
+      showTriangle = !showTriangle;
+      break;
     case 'medians':
       showMedians = !showMedians;
       break;
@@ -50,6 +53,9 @@ function updateLegendItemState(item, toggle) {
   let isEnabled = true;
 
   switch (toggle) {
+    case 'triangle':
+      isEnabled = showTriangle;
+      break;
     case 'medians':
       isEnabled = showMedians;
       break;

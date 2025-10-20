@@ -118,7 +118,7 @@
     .color-blue { color: rgb(0, 0, 255); }
     .color-purple { color: rgb(128, 0, 128); }
     .color-orange { color: rgb(255, 165, 0); }
-    .color-cyan { color: rgb(0, 255, 255); }
+    .color-darkyellow { color: rgb(180, 180, 0); }
     .color-gray { color: rgb(80, 80, 80); }
   </style>
 </head>
@@ -134,6 +134,13 @@
         <div class="legend-line" style="background: white; border: 1px solid black;"></div>
       </div>
       <span>Driehoek ABC</span>
+    </div>
+
+    <div class="legend-item" data-toggle="coordinates">
+      <div class="legend-icon color-gray">
+        <div class="legend-axes"></div>
+      </div>
+      <span>Coördinatensysteem</span>
     </div>
 
     <div class="legend-item" data-toggle="medians">
@@ -172,17 +179,10 @@
     </div>
 
     <div class="legend-item" data-toggle="circumcircle">
-      <div class="legend-icon color-cyan">
+      <div class="legend-icon color-darkyellow">
         <div class="legend-circle"></div>
       </div>
       <span>Omgeschreven Cirkel</span>
-    </div>
-
-    <div class="legend-item" data-toggle="coordinates">
-      <div class="legend-icon color-gray">
-        <div class="legend-axes"></div>
-      </div>
-      <span>Coördinatensysteem</span>
     </div>
 
     <h4>Metingen</h4>

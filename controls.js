@@ -10,6 +10,9 @@ let controlStartPos = null; // Starting position for length adjustment
 let controlSnappedStartAngle = 0; // Snapped starting angle for rotation
 let controlSnappedStartLength = 0; // Snapped starting length
 
+const CONTROL_SPACING = 30; // Spacing between controls along the line
+const CONTROL_GAP_SIZE = 30; // Extra gap in the middle to separate left/right groups
+
 // Control icon size and detection radius
 const CONTROL_ICON_SIZE = 12;
 const CONTROL_DETECT_RADIUS = 15;
@@ -65,8 +68,6 @@ function drawEdgeControls(edge) {
   const edgeLength = edgeVec.mag();
   const edgeDir = edgeVec.normalize();
 
-  const spacing = 30; // Spacing between controls along the line
-
   // Convert to world mouse position
   const worldMouseX = mouseX - cameraOffsetX;
   const worldMouseY = mouseY - cameraOffsetY;
@@ -75,21 +76,22 @@ function drawEdgeControls(edge) {
   const midpoint = p5.Vector.add(p1, p2).div(2);
 
   // === All 4 controls positioned directly on the line ===
+  // Layout: [Length P1] [Angle P1] --- GAP --- [Angle P2] [Length P2]
 
   // Length control at P1 (leftmost)
-  const lengthControlP1 = p5.Vector.add(midpoint, p5.Vector.mult(edgeDir, -spacing * 1.5));
+  const lengthControlP1 = p5.Vector.add(midpoint, p5.Vector.mult(edgeDir, -(CONTROL_SPACING + CONTROL_GAP_SIZE)));
   const hoverLengthP1 = dist(worldMouseX, worldMouseY, lengthControlP1.x, lengthControlP1.y) < CONTROL_DETECT_RADIUS;
 
-  // Angle control at P1 (left-center)
-  const angleControlP1 = p5.Vector.add(midpoint, p5.Vector.mult(edgeDir, -spacing * 0.5));
+  // Angle control at P1 (left side, near gap)
+  const angleControlP1 = p5.Vector.add(midpoint, p5.Vector.mult(edgeDir, -CONTROL_GAP_SIZE));
   const hoverAngleP1 = dist(worldMouseX, worldMouseY, angleControlP1.x, angleControlP1.y) < CONTROL_DETECT_RADIUS;
 
-  // Angle control at P2 (right-center)
-  const angleControlP2 = p5.Vector.add(midpoint, p5.Vector.mult(edgeDir, spacing * 0.5));
+  // Angle control at P2 (right side, near gap)
+  const angleControlP2 = p5.Vector.add(midpoint, p5.Vector.mult(edgeDir, CONTROL_GAP_SIZE));
   const hoverAngleP2 = dist(worldMouseX, worldMouseY, angleControlP2.x, angleControlP2.y) < CONTROL_DETECT_RADIUS;
 
   // Length control at P2 (rightmost)
-  const lengthControlP2 = p5.Vector.add(midpoint, p5.Vector.mult(edgeDir, spacing * 1.5));
+  const lengthControlP2 = p5.Vector.add(midpoint, p5.Vector.mult(edgeDir, CONTROL_SPACING + CONTROL_GAP_SIZE));
   const hoverLengthP2 = dist(worldMouseX, worldMouseY, lengthControlP2.x, lengthControlP2.y) < CONTROL_DETECT_RADIUS;
 
   // Draw all four controls
@@ -172,24 +174,23 @@ function checkControlIconClick(worldMouseX, worldMouseY, edge) {
   const edgeVec = p5.Vector.sub(p2, p1);
   const edgeDir = edgeVec.normalize();
 
-  const spacing = 30; // Spacing between controls along the line
-
   // Calculate midpoint of the edge
   const midpoint = p5.Vector.add(p1, p2).div(2);
 
   // === All 4 controls positioned directly on the line ===
+  // Layout: [Length P1] [Angle P1] --- GAP --- [Angle P2] [Length P2]
 
   // Length control at P1 (leftmost)
-  const lengthControlP1 = p5.Vector.add(midpoint, p5.Vector.mult(edgeDir, -spacing * 1.5));
+  const lengthControlP1 = p5.Vector.add(midpoint, p5.Vector.mult(edgeDir, -(CONTROL_SPACING + CONTROL_SPACING)));
 
-  // Angle control at P1 (left-center)
-  const angleControlP1 = p5.Vector.add(midpoint, p5.Vector.mult(edgeDir, -spacing * 0.5));
+  // Angle control at P1 (left side, near gap)
+  const angleControlP1 = p5.Vector.add(midpoint, p5.Vector.mult(edgeDir, -CONTROL_SPACING));
 
-  // Angle control at P2 (right-center)
-  const angleControlP2 = p5.Vector.add(midpoint, p5.Vector.mult(edgeDir, spacing * 0.5));
+  // Angle control at P2 (right side, near gap)
+  const angleControlP2 = p5.Vector.add(midpoint, p5.Vector.mult(edgeDir, CONTROL_SPACING));
 
   // Length control at P2 (rightmost)
-  const lengthControlP2 = p5.Vector.add(midpoint, p5.Vector.mult(edgeDir, spacing * 1.5));
+  const lengthControlP2 = p5.Vector.add(midpoint, p5.Vector.mult(edgeDir, CONTROL_SPACING + CONTROL_SPACING));
 
   // Check all four controls
   if (dist(worldMouseX, worldMouseY, angleControlP1.x, angleControlP1.y) < CONTROL_DETECT_RADIUS) {
